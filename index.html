@@ -276,11 +276,11 @@ position:sticky;top:0;z-index:10;
 
 .chat-messages{
 flex:1;overflow-y:auto;padding:18px 18px 12px;
-display:flex;flex-direction:column-reverse;
+display:flex;flex-direction:column;
 gap:14px;
 }
 .msg{max-width:88%;animation:msgIn 0.4s cubic-bezier(.2,.9,.3,1.2)}
-@keyframes msgIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes msgIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .msg.user{align-self:flex-end}
 .msg.ai{align-self:flex-start}
 .msg-bubble{padding:14px 18px;border-radius:20px;font-size:15px;line-height:1.5;word-wrap:break-word}
@@ -296,6 +296,16 @@ display:inline-flex;align-items:center;gap:5px;font-family:inherit;
 }
 .msg-tool-btn:hover{border-color:var(–accent);color:var(–text);background:var(–card-hover)}
 
+.zh-translate-bubble{
+background:linear-gradient(135deg,rgba(78,205,196,0.12),rgba(124,110,247,0.06));
+border:1px solid rgba(78,205,196,0.3);
+border-radius:16px;padding:12px 16px;
+align-self:flex-end;max-width:88%;font-size:13px;
+}
+.zh-translate-label{font-size:11px;color:var(–accent2);font-weight:700;letter-spacing:1px;margin-bottom:6px}
+.zh-translate-original{color:var(–muted);margin-bottom:4px}
+.zh-translate-arrow{color:var(–muted2);margin-bottom:4px;font-size:11px}
+.zh-translate-result{color:var(–text);font-weight:600;display:flex;align-items:center;flex-wrap:wrap;gap:4px}
 .correction{
 background:linear-gradient(135deg,rgba(255,184,110,0.12),rgba(255,107,157,0.06));
 border:1px solid rgba(255,184,110,0.3);
@@ -497,12 +507,13 @@ animation:micPulse 1.2s ease-in-out infinite;
       <div class="chat-empty" id="chat-empty">
         <div class="chat-empty-icon">💬</div>
         <div class="chat-empty-title">开始对话吧</div>
-        <div class="chat-empty-desc">点击下方麦克风录音，或直接输入文字。AI 会先纠正你的错误，再继续聊天。</div>
+        <div class="chat-empty-desc">点击下方麦克风录音，或直接输入文字。AI 会先纠正你的错误，再继续聊天。
+        也可以直接输入中文，系统会自动翻译并承接对话。</div>
       </div>
     </div>
     <div class="chat-input">
       <div class="input-wrap">
-        <textarea class="text-input" id="text-input" placeholder="输入或按住麦克风..." rows="1"></textarea>
+        <textarea class="text-input" id="text-input" placeholder="可用中文或目标语言输入..." rows="1"></textarea>
         <button class="send-btn" id="send-btn" title="发送">↑</button>
       </div>
       <button class="mic-btn" id="mic-btn" title="语音输入">🎤</button>
@@ -1121,7 +1132,7 @@ function renderPhrases(){
 function startChat(){
   state.history=[];
   document.getElementById('chat-title').textContent=`${state.lang.name} · ${state.scene.name} · ${state.diff.name}`;
-  document.getElementById('chat-sub-text').textContent='AI 教练在线 · 会先纠错再回应';
+  document.getElementById('chat-sub-text').textContent='AI 教练在线 · 支持中文输入 · 自动翻译';
   renderMessages();
   show('chat');
   setTimeout(()=>aiOpening(),300);
@@ -1131,13 +1142,26 @@ function renderMessages(){
   const box=document.getElementById('chat-messages');
   box.innerHTML='';
   if(state.history.length===0){
-    box.innerHTML=`<div class="chat-empty"><div class="chat-empty-icon">💬</div><div class="chat-empty-title">开始对话吧</div><div class="chat-empty-desc">点击下方麦克风录音，或直接输入文字。AI 会先纠正你的错误，再继续聊天。</div></div>`;
+    box.innerHTML=`<div class="chat-empty"><div class="chat-empty-icon">💬</div><div class="chat-empty-title">开始对话吧</div><div class="chat-empty-desc">点击下方麦克风录音，或直接输入文字。AI 会先纠正你的错误，再继续聊天。
+        也可以直接输入中文，系统会自动翻译并承接对话。</div></div>`;
     return;
   }
   state.history.forEach(m=>{box.appendChild(buildMsgEl(m));});
 }
 
 function buildMsgEl(m){
+  if(m.role==='zh-translate'){
+    const d=document.createElement('div');
+    d.className='zh-translate-bubble';
+    d.innerHTML=`
+      <div class="zh-translate-label">🔄 中文翻译为目标语言</div>
+      <div class="zh-translate-original">${m.original}</div>
+      <div class="zh-translate-arrow">↓</div>
+      <div class="zh-translate-result">${m.translated}
+        <button class="msg-tool-btn" style="margin-left:8px;display:inline-flex" data-speak="${encodeURIComponent(m.translated.replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'"))}">🔊</button>
+      </div>`;
+    return d;
+  }
   if(m.role==='correction'){
     const d=document.createElement('div');
     d.className='correction';
@@ -1177,6 +1201,7 @@ function pushAndRender(item){
   const empty=box.querySelector('.chat-empty');
   if(empty)empty.remove();
   box.appendChild(buildMsgEl(item));
+  requestAnimationFrame(()=>{ box.scrollTop=box.scrollHeight; });
 }
 
 function removeTyping(){
@@ -1190,11 +1215,7 @@ function removeTyping(){
 // AI CALL
 // ============================================================
 async function callAI(userMsg, isOpening=false){
-  const apiKey=localStorage.getItem('ds_api_key')||'';
-  if(!apiKey){
-    showKeyModal();
-    return {hasError:false,reply:'',translation:'请先输入 DeepSeek API Key'};
-  }
+  const apiKey='YOUR_DEEPSEEK_KEY_HERE';
   const sysPrompt=buildSystemPrompt();
   const messages=[{role:'system',content:sysPrompt}];
   state.history.filter(m=>m.role==='user'||m.role==='ai').forEach(m=>{
@@ -1293,15 +1314,22 @@ ${S.id==='daily'?'本场景为日常对话：自然、口语化、贴近真实�
 2. 始终用 ${L.native} 自然地回应，并附上完整中文翻译。
 3. 难度匹配：${D.id==='easy'?'用最简单的词汇和短句，速度慢。':D.id==='mid'?'用日常常用表达。':'用地道、复杂、自然的表达。'}
 4. 每次回复保持 1-3 句话，自然地推进对话或反问。
-5. 如果用户用中文输入，先鼓励其尝试用 ${L.native}，并给出建议表达，然后用 ${L.native} 继续。
+5. 如果用户用中文输入，请：
+   a) 在 "chineseInput" 字段中填入用户的中文原文；
+   b) 在 "chineseTranslated" 字段中填入该中文对应的 ${L.native} 翻译（这相当于用户"说出了"这句话）；
+   c) 然后像正常对话一样用 ${L.native} 自然回复，并附上中文翻译。
+   不要批评用户用中文输入，直接帮他翻译并承接对话。
 
 【输出格式】只输出一个 JSON 对象（不要 markdown，不要其它文字）。结构：
 
-无错误时：
+用户用目标语言输入、无错误时：
 {"hasError":false,"reply":"<${L.native} 回复>","translation":"<中文翻译>"}
 
-有错误时：
+用户用目标语言输入、有错误时：
 {"hasError":true,"correctionOriginal":"<用户原句>","correctionFixed":"<纠正后的句子>","explanation":"<一句中文解释错误点>","reply":"<${L.native} 回复>","translation":"<中文翻译>"}
+
+用户用中文输入时（无论有无错误）：
+{"hasError":false,"chineseInput":"<用户中文原文>","chineseTranslated":"<对应的${L.native}翻译>","reply":"<${L.native} 回复>","translation":"<中文翻译>"}
 
 只输出 JSON，不要任何额外说明。`;
 }
@@ -1318,10 +1346,20 @@ async function aiOpening(){
 async function sendUserMessage(text){
   if(!text||!text.trim())return;
   text=text.trim();
+  // Show user bubble (Chinese or target language)
   pushAndRender({role:'user',content:text});
   pushAndRender({role:'typing'});
   const res=await callAI(text);
   removeTyping();
+  // If user typed Chinese, show a translation hint bubble
+  if(res.chineseInput && res.chineseTranslated){
+    pushAndRender({
+      role:'zh-translate',
+      original:escapeHtml(res.chineseInput),
+      translated:escapeHtml(res.chineseTranslated)
+    });
+  }
+  // Grammar correction bubble
   if(res.hasError && res.correctionFixed){
     pushAndRender({
       role:'correction',
