@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>AI 口语教练 · Speak Learn Grow</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
   html,body{height:100%}
   :root{
@@ -25,7 +23,7 @@
     --border-bright:rgba(255,255,255,0.15);
     --radius:20px;
     --radius-sm:14px;
-    --font:'Plus Jakarta Sans','Noto Sans SC',-apple-system,sans-serif;
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI Variable", "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans CN", sans-serif;
   }
   body{
     font-family:var(--font);
@@ -34,9 +32,9 @@
     min-height:100vh;
     overflow-x:hidden;
     -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
   }
 
-  /* AMBIENT GLOW */
   body::before{
     content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     background:
@@ -58,7 +56,7 @@
     width:48px;height:48px;border-radius:50%;
     display:inline-flex;align-items:center;justify-content:center;
     cursor:pointer;transition:all 0.2s;flex-shrink:0;
-    font-size:20px;color:var(--text);
+    font-size:20px;color:var(--text);font-weight:600;
   }
   .back-btn:hover{border-color:var(--accent);background:var(--card-hover);transform:translateX(-2px)}
   .back-btn:active{transform:scale(0.95)}
@@ -119,7 +117,7 @@
   .lang-name{font-size:16px;font-weight:700;display:block;position:relative;z-index:1}
   .lang-sub{font-size:12px;color:var(--muted);display:block;margin-top:3px;position:relative;z-index:1;font-weight:500}
 
-  /* SCENE CARDS (English path) */
+  /* SCENE CARDS */
   .scene-list{display:flex;flex-direction:column;gap:14px}
   .scene-card{
     background:var(--card);
@@ -140,16 +138,14 @@
   .scene-card:hover{border-color:rgba(124,110,247,0.5);background:var(--card-hover);transform:translateX(4px)}
   .scene-card:hover::after{color:var(--accent2);right:18px}
   .scene-card:active{transform:scale(0.98)}
+  .scene-card[data-id="daily"] .scene-icon{background:linear-gradient(135deg,rgba(124,110,247,0.2),rgba(78,205,196,0.1));border:1px solid rgba(124,110,247,0.25)}
+  .scene-card[data-id="business"] .scene-icon{background:linear-gradient(135deg,rgba(255,184,110,0.2),rgba(255,107,157,0.1));border:1px solid rgba(255,184,110,0.25)}
+  .scene-card[data-id="deep"] .scene-icon{background:linear-gradient(135deg,rgba(78,205,196,0.2),rgba(124,110,247,0.1));border:1px solid rgba(78,205,196,0.25)}
   .scene-icon{
     width:60px;height:60px;border-radius:18px;
     display:flex;align-items:center;justify-content:center;
     font-size:30px;flex-shrink:0;
-    background:linear-gradient(135deg,rgba(124,110,247,0.2),rgba(78,205,196,0.1));
-    border:1px solid rgba(124,110,247,0.25);
   }
-  .scene-card:nth-child(2) .scene-icon{background:linear-gradient(135deg,rgba(255,184,110,0.2),rgba(255,107,157,0.1));border-color:rgba(255,184,110,0.25)}
-  .scene-card:nth-child(3) .scene-icon{background:linear-gradient(135deg,rgba(78,205,196,0.2),rgba(124,110,247,0.1));border-color:rgba(78,205,196,0.25)}
-  .scene-card:nth-child(4) .scene-icon{background:linear-gradient(135deg,rgba(255,107,157,0.2),rgba(124,110,247,0.1));border-color:rgba(255,107,157,0.25)}
   .scene-info{flex:1;padding-right:24px}
   .scene-name{font-size:17px;font-weight:700;display:block;margin-bottom:4px;letter-spacing:-0.2px}
   .scene-desc{font-size:13px;color:var(--muted);line-height:1.5}
@@ -173,43 +169,57 @@
   .diff-name{font-size:15px;font-weight:700;display:block;margin-bottom:2px}
   .diff-desc{font-size:12px;color:var(--muted)}
 
-  /* BASIC LEARNING (non-English) */
-  .module-list{display:flex;flex-direction:column;gap:14px}
+  /* MODULES (basic-hub) */
+  .module-list{display:flex;flex-direction:column;gap:12px}
   .module-card{
     background:var(--card);
     border:1.5px solid var(--border);
     border-radius:var(--radius);
-    padding:22px;cursor:pointer;
+    padding:20px;cursor:pointer;
     transition:all 0.25s;display:flex;align-items:center;gap:16px;
     position:relative;overflow:hidden;
   }
   .module-card:hover{border-color:rgba(124,110,247,0.5);transform:translateX(4px)}
   .module-card:active{transform:scale(0.98)}
+  .module-card.advanced{
+    background:linear-gradient(135deg,rgba(124,110,247,0.18),rgba(78,205,196,0.1));
+    border:1.5px solid rgba(124,110,247,0.4);
+    margin-top:6px;
+  }
+  .module-card.advanced:hover{border-color:var(--accent);transform:translateX(4px) scale(1.01)}
   .module-icon{
-    width:54px;height:54px;border-radius:16px;
+    width:50px;height:50px;border-radius:14px;
     display:flex;align-items:center;justify-content:center;
-    font-size:26px;flex-shrink:0;
+    font-size:24px;flex-shrink:0;
   }
   .module-info{flex:1}
-  .module-name{font-size:16px;font-weight:700;display:block;margin-bottom:3px}
+  .module-name{font-size:15px;font-weight:700;display:block;margin-bottom:2px}
   .module-desc{font-size:12px;color:var(--muted);line-height:1.4}
   .module-arrow{font-size:18px;color:var(--muted2)}
+  .module-card.advanced .module-arrow{color:var(--accent2)}
 
-  /* LEARN CONTENT (alphabet/grammar/phrases) */
-  .learn-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:10px;margin-top:12px}
+  /* ALPHABET / WORDS / PHRASES */
+  .group-label{
+    font-size:12px;color:var(--accent2);font-weight:700;
+    margin:18px 4px 10px;letter-spacing:1px;
+  }
+  .group-label:first-child{margin-top:0}
+  .learn-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:10px}
   .alpha-cell{
     background:var(--card);border:1.5px solid var(--border);
     border-radius:var(--radius-sm);padding:14px 8px;
     text-align:center;cursor:pointer;transition:all 0.2s;
     min-height:88px;display:flex;flex-direction:column;justify-content:center;
+    position:relative;
   }
   .alpha-cell:hover{border-color:var(--accent);background:var(--card-hover);transform:translateY(-2px)}
   .alpha-cell:active{transform:scale(0.94)}
-  .alpha-letter{font-size:22px;font-weight:700;margin-bottom:4px;line-height:1}
+  .alpha-cell.silent{opacity:0.7}
+  .alpha-letter{font-size:20px;font-weight:700;margin-bottom:4px;line-height:1.2}
   .alpha-pron{font-size:11px;color:var(--accent2);font-weight:600}
   .alpha-zh{font-size:10px;color:var(--muted);margin-top:2px}
 
-  .phrase-list{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+  .phrase-list{display:flex;flex-direction:column;gap:10px}
   .phrase-card{
     background:var(--card);border:1px solid var(--border);
     border-radius:var(--radius-sm);padding:16px 18px;
@@ -217,18 +227,20 @@
     display:flex;align-items:center;gap:14px;
   }
   .phrase-card:hover{border-color:var(--accent);background:var(--card-hover)}
-  .phrase-text{flex:1}
-  .phrase-target{font-size:16px;font-weight:600;margin-bottom:3px}
+  .phrase-card:active{transform:scale(0.98)}
+  .phrase-text{flex:1;min-width:0}
+  .phrase-target{font-size:16px;font-weight:600;margin-bottom:3px;word-break:break-word}
   .phrase-zh{font-size:13px;color:var(--muted)}
   .phrase-play{
     width:40px;height:40px;border-radius:50%;
     background:rgba(124,110,247,0.15);
     display:flex;align-items:center;justify-content:center;
-    color:var(--accent);font-size:14px;flex-shrink:0;
+    color:var(--accent);font-size:13px;flex-shrink:0;
     transition:all 0.2s;
   }
-  .phrase-card:hover .phrase-play{background:var(--accent);color:#fff}
+  .phrase-card:hover .phrase-play{background:var(--accent);color:#fff;transform:scale(1.08)}
 
+  /* GRAMMAR / PHONICS */
   .grammar-card{
     background:var(--card);border:1px solid var(--border);
     border-radius:var(--radius-sm);padding:18px 20px;
@@ -239,10 +251,12 @@
   .grammar-example{
     background:rgba(124,110,247,0.08);border-left:3px solid var(--accent);
     padding:10px 14px;border-radius:8px;margin-top:10px;font-size:13px;
+    cursor:pointer;transition:all 0.2s;
   }
+  .grammar-example:hover{background:rgba(124,110,247,0.15)}
   .grammar-example .ex-zh{color:var(--muted);font-size:12px;margin-top:4px}
 
-  /* CONVERSATION */
+  /* CHAT */
   .chat-screen{padding:0;display:none;flex-direction:column;height:100vh;background:var(--bg)}
   .chat-screen.active{display:flex}
   .chat-header{
@@ -253,8 +267,8 @@
     backdrop-filter:blur(10px);
     position:sticky;top:0;z-index:10;
   }
-  .chat-info{flex:1}
-  .chat-title{font-size:15px;font-weight:700;letter-spacing:-0.2px}
+  .chat-info{flex:1;min-width:0}
+  .chat-title{font-size:15px;font-weight:700;letter-spacing:-0.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .chat-sub{font-size:11px;color:var(--muted);margin-top:2px;display:flex;align-items:center;gap:6px}
   .live-dot{width:6px;height:6px;border-radius:50%;background:#4ecdc4;animation:pulse 1.6s ease-in-out infinite}
   @keyframes pulse{0%,100%{opacity:0.5}50%{opacity:1}}
@@ -264,48 +278,27 @@
     display:flex;flex-direction:column-reverse;
     gap:14px;
   }
-  .msg{
-    max-width:88%;animation:msgIn 0.4s cubic-bezier(.2,.9,.3,1.2);
-  }
+  .msg{max-width:88%;animation:msgIn 0.4s cubic-bezier(.2,.9,.3,1.2)}
   @keyframes msgIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
   .msg.user{align-self:flex-end}
   .msg.ai{align-self:flex-start}
-  .msg-bubble{
-    padding:14px 18px;border-radius:20px;
-    font-size:15px;line-height:1.5;
-    word-wrap:break-word;
-  }
-  .msg.user .msg-bubble{
-    background:linear-gradient(135deg,#7c6ef7,#9d8ff8);
-    color:#fff;border-bottom-right-radius:6px;
-  }
-  .msg.ai .msg-bubble{
-    background:var(--card);
-    border:1px solid var(--border);
-    border-bottom-left-radius:6px;
-  }
-  .msg-zh{
-    font-size:12px;color:var(--muted);
-    margin-top:6px;padding:0 6px;line-height:1.5;
-  }
-  .msg-tools{
-    display:flex;gap:8px;margin-top:8px;padding:0 4px;
-  }
+  .msg-bubble{padding:14px 18px;border-radius:20px;font-size:15px;line-height:1.5;word-wrap:break-word}
+  .msg.user .msg-bubble{background:linear-gradient(135deg,#7c6ef7,#9d8ff8);color:#fff;border-bottom-right-radius:6px}
+  .msg.ai .msg-bubble{background:var(--card);border:1px solid var(--border);border-bottom-left-radius:6px}
+  .msg-zh{font-size:12px;color:var(--muted);margin-top:6px;padding:0 6px;line-height:1.5}
+  .msg-tools{display:flex;gap:8px;margin-top:8px;padding:0 4px}
   .msg-tool-btn{
     background:var(--card);border:1px solid var(--border);
     border-radius:50px;padding:6px 12px;font-size:11px;
     color:var(--muted);cursor:pointer;transition:all 0.2s;
-    display:inline-flex;align-items:center;gap:5px;
-    font-family:inherit;
+    display:inline-flex;align-items:center;gap:5px;font-family:inherit;
   }
   .msg-tool-btn:hover{border-color:var(--accent);color:var(--text);background:var(--card-hover)}
 
-  /* CORRECTION */
   .correction{
     background:linear-gradient(135deg,rgba(255,184,110,0.12),rgba(255,107,157,0.06));
     border:1px solid rgba(255,184,110,0.3);
     border-radius:16px;padding:14px 16px;
-    margin-bottom:8px;
     align-self:flex-end;max-width:88%;
   }
   .correction-label{
@@ -322,14 +315,12 @@
     line-height:1.5;
   }
 
-  /* TYPING INDICATOR */
   .typing{align-self:flex-start;display:flex;gap:5px;padding:14px 18px;background:var(--card);border:1px solid var(--border);border-radius:20px;border-bottom-left-radius:6px}
   .typing-dot{width:7px;height:7px;border-radius:50%;background:var(--muted);animation:typing 1.4s infinite}
   .typing-dot:nth-child(2){animation-delay:0.2s}
   .typing-dot:nth-child(3){animation-delay:0.4s}
   @keyframes typing{0%,60%,100%{transform:translateY(0);opacity:0.5}30%{transform:translateY(-6px);opacity:1}}
 
-  /* INPUT BAR */
   .chat-input{
     padding:14px 16px 18px;
     background:var(--bg2);
@@ -355,8 +346,7 @@
     background:linear-gradient(135deg,#7c6ef7,#4ecdc4);
     border:none;cursor:pointer;
     display:flex;align-items:center;justify-content:center;
-    color:#fff;font-size:18px;transition:all 0.2s;
-    flex-shrink:0;
+    color:#fff;font-size:18px;transition:all 0.2s;flex-shrink:0;
   }
   .send-btn:disabled{opacity:0.4;cursor:not-allowed}
   .send-btn:hover:not(:disabled){transform:scale(1.05)}
@@ -367,8 +357,7 @@
     background:linear-gradient(135deg,#7c6ef7,#9d8ff8);
     border:none;cursor:pointer;
     display:flex;align-items:center;justify-content:center;
-    color:#fff;font-size:22px;transition:all 0.2s;
-    flex-shrink:0;
+    color:#fff;font-size:22px;transition:all 0.2s;flex-shrink:0;
     box-shadow:0 6px 20px rgba(124,110,247,0.4);
   }
   .mic-btn:hover{transform:scale(1.06)}
@@ -379,43 +368,18 @@
   }
   @keyframes micPulse{0%,100%{box-shadow:0 6px 20px rgba(255,107,107,0.4),0 0 0 0 rgba(255,107,107,0.5)}50%{box-shadow:0 6px 20px rgba(255,107,107,0.6),0 0 0 14px rgba(255,107,107,0)}}
 
-  /* CHAT EMPTY STATE */
-  .chat-empty{
-    flex:1;display:flex;flex-direction:column;
-    align-items:center;justify-content:center;
-    text-align:center;padding:30px;color:var(--muted);
-  }
+  .chat-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;color:var(--muted)}
   .chat-empty-icon{font-size:54px;margin-bottom:16px;opacity:0.6}
   .chat-empty-title{font-size:17px;font-weight:600;color:var(--text);margin-bottom:8px}
   .chat-empty-desc{font-size:13px;line-height:1.6;max-width:280px}
 
-  /* UTILITY */
   .scrollable::-webkit-scrollbar{width:0}
-  .start-btn{
-    width:100%;padding:18px;
-    background:linear-gradient(135deg,#7c6ef7,#4ecdc4);
-    border:none;border-radius:var(--radius);
-    color:#fff;font-size:16px;font-weight:700;
-    cursor:pointer;margin-top:24px;
-    transition:all 0.2s;letter-spacing:0.3px;
-    box-shadow:0 10px 30px rgba(124,110,247,0.35);
-  }
-  .start-btn:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(124,110,247,0.5)}
-  .start-btn:active{transform:scale(0.98)}
-
-  .api-warn{
-    background:linear-gradient(135deg,rgba(255,184,110,0.12),rgba(255,107,107,0.06));
-    border:1px solid rgba(255,184,110,0.3);
-    border-radius:14px;padding:12px 16px;
-    font-size:12px;color:var(--accent3);
-    margin:0 18px 12px;line-height:1.5;
-  }
 </style>
 </head>
 <body>
 <div class="app">
 
-  <!-- ========== HOME ========== -->
+  <!-- HOME -->
   <div class="screen active" id="screen-home">
     <div class="hero">
       <div class="hero-icon">🎓</div>
@@ -426,28 +390,28 @@
     <div class="lang-grid" id="lang-grid"></div>
   </div>
 
-  <!-- ========== ENGLISH SCENES ========== -->
-  <div class="screen" id="screen-en-scenes">
+  <!-- SCENES (universal, dynamic per language) -->
+  <div class="screen" id="screen-scenes">
     <div class="top-bar">
-      <button class="back-btn" data-back="home">←</button>
-      <div class="top-title">英语 · English</div>
-      <div class="top-meta">🇺🇸</div>
+      <button class="back-btn" id="scenes-back">←</button>
+      <div class="top-title" id="scenes-title">选择场景</div>
+      <div class="top-meta" id="scenes-flag">🌐</div>
     </div>
     <div class="section-label">选择练习场景</div>
-    <div class="scene-list" id="en-scene-list"></div>
+    <div class="scene-list" id="scene-list"></div>
   </div>
 
-  <!-- ========== DIFFICULTY ========== -->
+  <!-- DIFFICULTY -->
   <div class="screen" id="screen-difficulty">
     <div class="top-bar">
-      <button class="back-btn" data-back="auto">←</button>
+      <button class="back-btn" data-back="scenes">←</button>
       <div class="top-title" id="diff-title">选择难度</div>
     </div>
     <div class="section-label">选择难度等级 · Difficulty</div>
     <div class="difficulty-grid" id="diff-grid"></div>
   </div>
 
-  <!-- ========== NON-ENGLISH HUB ========== -->
+  <!-- BASIC HUB (non-English) -->
   <div class="screen" id="screen-basic-hub">
     <div class="top-bar">
       <button class="back-btn" data-back="home">←</button>
@@ -458,17 +422,27 @@
     <div class="module-list" id="module-list"></div>
   </div>
 
-  <!-- ========== ALPHABET ========== -->
+  <!-- ALPHABET -->
   <div class="screen" id="screen-alphabet">
     <div class="top-bar">
       <button class="back-btn" data-back="basic">←</button>
       <div class="top-title">字母与发音</div>
     </div>
-    <div class="section-label" id="alpha-section-label">点击字母听发音</div>
-    <div class="learn-grid" id="alpha-grid"></div>
+    <div class="section-label">点击字母听发音</div>
+    <div id="alphabet-content"></div>
   </div>
 
-  <!-- ========== GRAMMAR ========== -->
+  <!-- PHONICS -->
+  <div class="screen" id="screen-phonics">
+    <div class="top-bar">
+      <button class="back-btn" data-back="basic">←</button>
+      <div class="top-title">拼读规则</div>
+    </div>
+    <div class="section-label">点击例词可朗读</div>
+    <div id="phonics-content"></div>
+  </div>
+
+  <!-- GRAMMAR -->
   <div class="screen" id="screen-grammar">
     <div class="top-bar">
       <button class="back-btn" data-back="basic">←</button>
@@ -478,17 +452,27 @@
     <div id="grammar-content"></div>
   </div>
 
-  <!-- ========== PHRASES ========== -->
+  <!-- WORDS -->
+  <div class="screen" id="screen-words">
+    <div class="top-bar">
+      <button class="back-btn" data-back="basic">←</button>
+      <div class="top-title">常见词语</div>
+    </div>
+    <div class="section-label">点击播放发音</div>
+    <div class="phrase-list" id="words-list"></div>
+  </div>
+
+  <!-- PHRASES -->
   <div class="screen" id="screen-phrases">
     <div class="top-bar">
       <button class="back-btn" data-back="basic">←</button>
-      <div class="top-title">常用句子</div>
+      <div class="top-title">常见句子</div>
     </div>
     <div class="section-label">点击播放发音</div>
     <div class="phrase-list" id="phrase-list"></div>
   </div>
 
-  <!-- ========== CHAT ========== -->
+  <!-- CHAT -->
   <div class="chat-screen" id="screen-chat">
     <div class="chat-header">
       <button class="back-btn" id="chat-back">←</button>
@@ -497,7 +481,6 @@
         <div class="chat-sub"><span class="live-dot"></span><span id="chat-sub-text">AI 教练在线 · 随时帮你纠正</span></div>
       </div>
     </div>
-
     <div class="chat-messages scrollable" id="chat-messages">
       <div class="chat-empty" id="chat-empty">
         <div class="chat-empty-icon">💬</div>
@@ -505,7 +488,6 @@
         <div class="chat-empty-desc">点击下方麦克风录音，或直接输入文字。AI 会先纠正你的错误，再继续聊天。</div>
       </div>
     </div>
-
     <div class="chat-input">
       <div class="input-wrap">
         <textarea class="text-input" id="text-input" placeholder="输入或按住麦克风..." rows="1"></textarea>
@@ -542,100 +524,249 @@ const DIFFICULTIES = [
 ];
 
 const MODULES = [
-  {id:'alphabet',icon:'🔤',name:'字母发音',desc:'基础字母与语音规则',color:'rgba(124,110,247,0.18)'},
-  {id:'grammar',icon:'📐',name:'语法基础',desc:'入门语法要点',color:'rgba(78,205,196,0.18)'},
-  {id:'phrases',icon:'💬',name:'常用句子',desc:'日常高频表达',color:'rgba(255,184,110,0.18)'},
-  {id:'advanced',icon:'🚀',name:'进阶练习',desc:'场景对话 · AI 实时纠错',color:'rgba(255,107,157,0.18)'},
+  {id:'alphabet',icon:'🔤',name:'字母发音',desc:'基础字母与读音',color:'rgba(124,110,247,0.18)'},
+  {id:'phonics', icon:'🎵',name:'拼读规则',desc:'音变 · 重音 · 组合',color:'rgba(78,205,196,0.18)'},
+  {id:'grammar', icon:'📐',name:'语法基础',desc:'入门语法要点',color:'rgba(255,184,110,0.18)'},
+  {id:'words',   icon:'📝',name:'常见词语',desc:'高频词汇',color:'rgba(255,107,157,0.18)'},
+  {id:'phrases', icon:'💬',name:'常见句子',desc:'日常实用表达',color:'rgba(124,110,247,0.18)'},
+  {id:'advanced',icon:'🚀',name:'进阶练习',desc:'AI 实时陪练 · 场景对话纠错',color:'rgba(78,205,196,0.18)'},
 ];
 
-// Alphabet data per language
+// ============================================================
+// 字母表 ALPHABETS
+// 俄语 33 个字母完整版（含 Ъ 和 Ь）
+// ============================================================
 const ALPHABETS = {
+  ru:{
+    head:'俄语 · 33 个字母',
+    items:[
+      {l:'А а',p:'[a]',z:'阿'},
+      {l:'Б б',p:'[b] / "бэ"',z:'贝'},
+      {l:'В в',p:'[v] / "вэ"',z:'韦'},
+      {l:'Г г',p:'[g] / "гэ"',z:'给'},
+      {l:'Д д',p:'[d] / "дэ"',z:'代'},
+      {l:'Е е',p:'[je]',z:'耶'},
+      {l:'Ё ё',p:'[jo]',z:'哟'},
+      {l:'Ж ж',p:'[ʐ] / "жэ"',z:'热'},
+      {l:'З з',p:'[z] / "зэ"',z:'泽'},
+      {l:'И и',p:'[i]',z:'伊'},
+      {l:'Й й',p:'[j]',z:'短伊'},
+      {l:'К к',p:'[k] / "ка"',z:'卡'},
+      {l:'Л л',p:'[l] / "эль"',z:'艾勒'},
+      {l:'М м',p:'[m] / "эм"',z:'艾姆'},
+      {l:'Н н',p:'[n] / "эн"',z:'艾恩'},
+      {l:'О о',p:'[o]',z:'噢'},
+      {l:'П п',p:'[p] / "пэ"',z:'佩'},
+      {l:'Р р',p:'[r] / "эр"',z:'艾尔'},
+      {l:'С с',p:'[s] / "эс"',z:'艾斯'},
+      {l:'Т т',p:'[t] / "тэ"',z:'泰'},
+      {l:'У у',p:'[u]',z:'乌'},
+      {l:'Ф ф',p:'[f] / "эф"',z:'艾弗'},
+      {l:'Х х',p:'[x] / "ха"',z:'哈'},
+      {l:'Ц ц',p:'[ts] / "цэ"',z:'采'},
+      {l:'Ч ч',p:'[tɕ] / "че"',z:'切'},
+      {l:'Ш ш',p:'[ʂ] / "ша"',z:'沙'},
+      {l:'Щ щ',p:'[ɕː] / "ща"',z:'谢恰'},
+      {l:'Ъ ъ',p:'твёрдый знак',z:'硬音符·不发音',silent:true},
+      {l:'Ы ы',p:'[ɨ]',z:'厄'},
+      {l:'Ь ь',p:'мягкий знак',z:'软音符·不发音',silent:true},
+      {l:'Э э',p:'[ɛ]',z:'埃'},
+      {l:'Ю ю',p:'[ju]',z:'尤'},
+      {l:'Я я',p:'[ja]',z:'亚'},
+    ]
+  },
+  es:{
+    head:'西班牙语 · 27 个字母',
+    items:[
+      {l:'A a',p:'[a]',z:'啊'},{l:'B b',p:'[b] / "be"',z:'贝'},
+      {l:'C c',p:'[k]/[θ]',z:'塞'},{l:'D d',p:'[d]',z:'德'},
+      {l:'E e',p:'[e]',z:'诶'},{l:'F f',p:'[f]',z:'埃费'},
+      {l:'G g',p:'[g]/[x]',z:'赫'},{l:'H h',p:'静音',z:'阿切',silent:true},
+      {l:'I i',p:'[i]',z:'伊'},{l:'J j',p:'[x]',z:'霍塔'},
+      {l:'K k',p:'[k]',z:'卡'},{l:'L l',p:'[l]',z:'埃勒'},
+      {l:'M m',p:'[m]',z:'埃姆'},{l:'N n',p:'[n]',z:'埃内'},
+      {l:'Ñ ñ',p:'[ɲ]',z:'恩涅'},{l:'O o',p:'[o]',z:'噢'},
+      {l:'P p',p:'[p]',z:'佩'},{l:'Q q',p:'[k]',z:'库'},
+      {l:'R r',p:'[r]',z:'埃雷'},{l:'S s',p:'[s]',z:'埃塞'},
+      {l:'T t',p:'[t]',z:'特'},{l:'U u',p:'[u]',z:'乌'},
+      {l:'V v',p:'[b]',z:'乌韦'},{l:'W w',p:'[w]',z:'乌韦双'},
+      {l:'X x',p:'[ks]',z:'埃基斯'},{l:'Y y',p:'[ʝ]',z:'耶'},
+      {l:'Z z',p:'[θ]/[s]',z:'塞塔'},
+    ]
+  },
+  ja:{
+    head:'日语 · 五十音（清音）',
+    items:[
+      {l:'あ',p:'a',z:'啊'},{l:'い',p:'i',z:'伊'},{l:'う',p:'u',z:'乌'},
+      {l:'え',p:'e',z:'诶'},{l:'お',p:'o',z:'噢'},
+      {l:'か',p:'ka',z:'卡'},{l:'き',p:'ki',z:'起'},{l:'く',p:'ku',z:'酷'},
+      {l:'け',p:'ke',z:'凯'},{l:'こ',p:'ko',z:'扣'},
+      {l:'さ',p:'sa',z:'萨'},{l:'し',p:'shi',z:'西'},{l:'す',p:'su',z:'苏'},
+      {l:'せ',p:'se',z:'赛'},{l:'そ',p:'so',z:'索'},
+      {l:'た',p:'ta',z:'他'},{l:'ち',p:'chi',z:'七'},{l:'つ',p:'tsu',z:'呲'},
+      {l:'て',p:'te',z:'忒'},{l:'と',p:'to',z:'托'},
+      {l:'な',p:'na',z:'那'},{l:'に',p:'ni',z:'尼'},{l:'ぬ',p:'nu',z:'努'},
+      {l:'ね',p:'ne',z:'内'},{l:'の',p:'no',z:'诺'},
+      {l:'は',p:'ha',z:'哈'},{l:'ひ',p:'hi',z:'西轻'},{l:'ふ',p:'fu',z:'夫'},
+      {l:'へ',p:'he',z:'嘿'},{l:'ほ',p:'ho',z:'吼'},
+      {l:'ま',p:'ma',z:'马'},{l:'み',p:'mi',z:'米'},{l:'む',p:'mu',z:'木'},
+      {l:'め',p:'me',z:'梅'},{l:'も',p:'mo',z:'摸'},
+      {l:'や',p:'ya',z:'呀'},{l:'ゆ',p:'yu',z:'尤'},{l:'よ',p:'yo',z:'哟'},
+      {l:'ら',p:'ra',z:'啦'},{l:'り',p:'ri',z:'力'},{l:'る',p:'ru',z:'噜'},
+      {l:'れ',p:'re',z:'累'},{l:'ろ',p:'ro',z:'罗'},
+      {l:'わ',p:'wa',z:'瓦'},{l:'を',p:'wo',z:'喔'},{l:'ん',p:'n',z:'嗯'},
+    ]
+  },
+  ko:{
+    head:'韩语 · 한글',
+    groups:[
+      {label:'子音 자음 (14)',items:[
+        {l:'ㄱ',p:'g/k',z:'기역'},{l:'ㄴ',p:'n',z:'니은'},{l:'ㄷ',p:'d/t',z:'디귿'},
+        {l:'ㄹ',p:'r/l',z:'리을'},{l:'ㅁ',p:'m',z:'미음'},{l:'ㅂ',p:'b/p',z:'비읍'},
+        {l:'ㅅ',p:'s',z:'시옷'},{l:'ㅇ',p:'ng/-',z:'이응'},{l:'ㅈ',p:'j',z:'지읒'},
+        {l:'ㅊ',p:'ch',z:'치읓'},{l:'ㅋ',p:'k',z:'키읔'},{l:'ㅌ',p:'t',z:'티읕'},
+        {l:'ㅍ',p:'p',z:'피읖'},{l:'ㅎ',p:'h',z:'히읗'},
+      ]},
+      {label:'母音 모음 (10)',items:[
+        {l:'ㅏ',p:'a',z:'啊'},{l:'ㅑ',p:'ya',z:'呀'},{l:'ㅓ',p:'eo',z:'哦'},
+        {l:'ㅕ',p:'yeo',z:'哟'},{l:'ㅗ',p:'o',z:'噢'},{l:'ㅛ',p:'yo',z:'哟'},
+        {l:'ㅜ',p:'u',z:'乌'},{l:'ㅠ',p:'yu',z:'尤'},{l:'ㅡ',p:'eu',z:'恩'},
+        {l:'ㅣ',p:'i',z:'伊'},
+      ]},
+    ]
+  },
+};
+
+// ============================================================
+// 拼读规则 PHONICS
+// ============================================================
+const PHONICS = {
   ru:[
-    {l:'А а',p:'[a]',z:'啊'},{l:'Б б',p:'[b]',z:'波'},{l:'В в',p:'[v]',z:'乌'},
-    {l:'Г г',p:'[g]',z:'格'},{l:'Д д',p:'[d]',z:'德'},{l:'Е е',p:'[je]',z:'耶'},
-    {l:'Ё ё',p:'[jo]',z:'哟'},{l:'Ж ж',p:'[ʐ]',z:'热'},{l:'З з',p:'[z]',z:'兹'},
-    {l:'И и',p:'[i]',z:'伊'},{l:'Й й',p:'[j]',z:'伊短'},{l:'К к',p:'[k]',z:'克'},
-    {l:'Л л',p:'[l]',z:'勒'},{l:'М м',p:'[m]',z:'姆'},{l:'Н н',p:'[n]',z:'恩'},
-    {l:'О о',p:'[o]',z:'噢'},{l:'П п',p:'[p]',z:'佩'},{l:'Р р',p:'[r]',z:'尔'},
-    {l:'С с',p:'[s]',z:'斯'},{l:'Т т',p:'[t]',z:'特'},{l:'У у',p:'[u]',z:'乌'},
-    {l:'Ф ф',p:'[f]',z:'弗'},{l:'Х х',p:'[x]',z:'喝'},{l:'Ц ц',p:'[ts]',z:'采'},
-    {l:'Ч ч',p:'[tʃ]',z:'切'},{l:'Ш ш',p:'[ʃ]',z:'什'},{l:'Щ щ',p:'[ʃʲ]',z:'夏'},
-    {l:'Ы ы',p:'[ɨ]',z:'厄'},{l:'Э э',p:'[ɛ]',z:'埃'},{l:'Ю ю',p:'[ju]',z:'尤'},
-    {l:'Я я',p:'[ja]',z:'雅'},
+    {t:'重音决定一切',b:'俄语单词只有一个重音，重读元音清晰，非重读元音弱化。学习单词必须同时记住重音位置。',ex:'хорошо',z:'好（重音在末位 -шо）'},
+    {t:'O 的弱化',b:'非重读位置的 O 读作 [a] 或 [ə]，仅重读 O 才发标准 [o] 音。',ex:'молоко',z:'牛奶（读作 ма-ла-кО）'},
+    {t:'词尾辅音清化',b:'浊辅音（б в г д ж з）位于词尾时变为清音（п ф к т ш с）。',ex:'хлеб',z:'面包（读作 хлеп）'},
+    {t:'软音符号 ь',b:'本身不发音，使前一辅音"软化"（带轻微 [j] 音）。',ex:'мать',z:'妈妈（т 软化）'},
+    {t:'软元音规则',b:'е ё и ю я 在词首或元音后带 [j] 音；在辅音后使该辅音软化。',ex:'я / тя',z:'я 读"亚"，тя 中 т 软化'},
+    {t:'颤音 P',b:'P 是大舌颤音，需要舌尖在上齿龈附近振动。',ex:'рука',z:'手（颤音 R）'},
   ],
   es:[
-    {l:'A a',p:'[a]',z:'啊'},{l:'B b',p:'[b]',z:'贝'},{l:'C c',p:'[k/θ]',z:'塞'},
-    {l:'D d',p:'[d]',z:'德'},{l:'E e',p:'[e]',z:'诶'},{l:'F f',p:'[f]',z:'埃费'},
-    {l:'G g',p:'[g/x]',z:'赫'},{l:'H h',p:'静音',z:'阿切'},{l:'I i',p:'[i]',z:'伊'},
-    {l:'J j',p:'[x]',z:'霍'},{l:'K k',p:'[k]',z:'卡'},{l:'L l',p:'[l]',z:'埃勒'},
-    {l:'M m',p:'[m]',z:'埃姆'},{l:'N n',p:'[n]',z:'埃内'},{l:'Ñ ñ',p:'[ɲ]',z:'恩涅'},
-    {l:'O o',p:'[o]',z:'噢'},{l:'P p',p:'[p]',z:'佩'},{l:'Q q',p:'[k]',z:'库'},
-    {l:'R r',p:'[r]',z:'埃雷'},{l:'S s',p:'[s]',z:'埃塞'},{l:'T t',p:'[t]',z:'特'},
-    {l:'U u',p:'[u]',z:'乌'},{l:'V v',p:'[b]',z:'乌韦'},{l:'W w',p:'[w]',z:'乌韦双'},
-    {l:'X x',p:'[ks]',z:'埃基斯'},{l:'Y y',p:'[ʝ/i]',z:'耶'},{l:'Z z',p:'[θ/s]',z:'塞塔'},
+    {t:'见字读音',b:'西班牙语拼写规则极为规整，每个字母通常对应一个固定发音，几乎"看见就能读"。',ex:'casa',z:'房子（直接拼读 ca-sa）'},
+    {t:'C 的两种读音',b:'C + e/i 读 [θ]（西班牙）或 [s]（拉美）；C + a/o/u 读 [k]。',ex:'cinco',z:'五（thinko / sinko）'},
+    {t:'G 的两种读音',b:'G + e/i 读 [x]（喉音 h）；G + a/o/u 读 [g]。',ex:'gente',z:'人们（hen-te）'},
+    {t:'H 永远不发音',b:'西语字母 H 在任何位置都不发音。',ex:'hola',z:'你好（读 o-la）'},
+    {t:'LL 与 Ñ',b:'LL 发 [j]，类似英语 y；Ñ 发 [ɲ]，类似 ny。',ex:'llamar / niño',z:'呼叫 / 男孩'},
+    {t:'RR / 词首 R 颤音',b:'词首 R 或词中 RR 必须打颤音；其他位置的 R 是单击音。',ex:'perro',z:'狗（颤音）'},
+    {t:'重音规则',b:'元音或 n/s 结尾，重音在倒数第二音节；其他辅音结尾，重音在末音节；不规则的标重音符号 á é í ó ú。',ex:'café',z:'咖啡（标号则按号）'},
   ],
   ja:[
-    {l:'あ',p:'a',z:'啊'},{l:'い',p:'i',z:'伊'},{l:'う',p:'u',z:'乌'},
-    {l:'え',p:'e',z:'诶'},{l:'お',p:'o',z:'噢'},
-    {l:'か',p:'ka',z:'卡'},{l:'き',p:'ki',z:'起'},{l:'く',p:'ku',z:'酷'},
-    {l:'け',p:'ke',z:'凯'},{l:'こ',p:'ko',z:'扣'},
-    {l:'さ',p:'sa',z:'萨'},{l:'し',p:'shi',z:'西'},{l:'す',p:'su',z:'苏'},
-    {l:'せ',p:'se',z:'赛'},{l:'そ',p:'so',z:'索'},
-    {l:'た',p:'ta',z:'他'},{l:'ち',p:'chi',z:'七'},{l:'つ',p:'tsu',z:'呲'},
-    {l:'て',p:'te',z:'忒'},{l:'と',p:'to',z:'托'},
-    {l:'な',p:'na',z:'那'},{l:'に',p:'ni',z:'尼'},{l:'ぬ',p:'nu',z:'努'},
-    {l:'ね',p:'ne',z:'内'},{l:'の',p:'no',z:'诺'},
-    {l:'は',p:'ha',z:'哈'},{l:'ひ',p:'hi',z:'西轻'},{l:'ふ',p:'fu',z:'夫'},
-    {l:'へ',p:'he',z:'嘿'},{l:'ほ',p:'ho',z:'吼'},
-    {l:'ま',p:'ma',z:'马'},{l:'み',p:'mi',z:'米'},{l:'む',p:'mu',z:'木'},
-    {l:'め',p:'me',z:'梅'},{l:'も',p:'mo',z:'摸'},
-    {l:'や',p:'ya',z:'呀'},{l:'ゆ',p:'yu',z:'尤'},{l:'よ',p:'yo',z:'哟'},
-    {l:'ら',p:'ra',z:'啦'},{l:'り',p:'ri',z:'力'},{l:'る',p:'ru',z:'噜'},
-    {l:'れ',p:'re',z:'累'},{l:'ろ',p:'ro',z:'罗'},
-    {l:'わ',p:'wa',z:'瓦'},{l:'を',p:'wo',z:'喔'},{l:'ん',p:'n',z:'嗯'},
+    {t:'五十音规律',b:'假名按辅音 + 元音组合，规律清晰：a-i-u-e-o 五元音 × 十行辅音。',ex:'か き く け こ',z:'k 行：ka ki ku ke ko'},
+    {t:'浊音 ゛',b:'在 k/s/t/h 行假名右上加两点变浊音：k→g、s→z、t→d、h→b。',ex:'か→が',z:'ka→ga'},
+    {t:'半浊音 ゜',b:'仅在 h 行加圆圈，h→p。',ex:'は→ぱ',z:'ha→pa'},
+    {t:'拗音（小ゃゅょ）',b:'i 段假名 + 小写 ゃ/ゅ/ょ 组成新音节，两个假名读一个音节。',ex:'きゃ',z:'kya（一个音节）'},
+    {t:'促音 っ',b:'小写 つ，表示停顿一拍，相当于把后面辅音双写。',ex:'がっこう',z:'学校（gak-koo）'},
+    {t:'长音',b:'元音延长一拍：あ段加あ、い段加い、う段加う、え段加い/え、お段加う/お。',ex:'おかあさん',z:'妈妈（おかー长音）'},
+    {t:'撥音 ん',b:'根据后续音变化为 [n]/[m]/[ŋ]，但占完整一拍。',ex:'にほん',z:'日本'},
   ],
   ko:[
-    {l:'ㄱ',p:'g/k',z:'基役'},{l:'ㄴ',p:'n',z:'尼恩'},{l:'ㄷ',p:'d/t',z:'低古'},
-    {l:'ㄹ',p:'r/l',z:'里乙'},{l:'ㅁ',p:'m',z:'米恩'},{l:'ㅂ',p:'b/p',z:'比乙'},
-    {l:'ㅅ',p:'s',z:'西奥'},{l:'ㅇ',p:'ng',z:'伊恩'},{l:'ㅈ',p:'j',z:'之乙'},
-    {l:'ㅊ',p:'ch',z:'七乙'},{l:'ㅋ',p:'k',z:'其各'},{l:'ㅌ',p:'t',z:'提股'},
-    {l:'ㅍ',p:'p',z:'皮乙'},{l:'ㅎ',p:'h',z:'喜乙'},
-    {l:'ㅏ',p:'a',z:'啊'},{l:'ㅑ',p:'ya',z:'呀'},{l:'ㅓ',p:'eo',z:'哦'},
-    {l:'ㅕ',p:'yeo',z:'哟'},{l:'ㅗ',p:'o',z:'噢'},{l:'ㅛ',p:'yo',z:'哟'},
-    {l:'ㅜ',p:'u',z:'乌'},{l:'ㅠ',p:'yu',z:'尤'},{l:'ㅡ',p:'eu',z:'恩'},
-    {l:'ㅣ',p:'i',z:'伊'},
+    {t:'方块字结构',b:'每个韩字方块 = 子音 + 母音（+ 收音）。书写按"左→右"或"上→下"组合。',ex:'가 / 한',z:'ㄱ+ㅏ / ㅎ+ㅏ+ㄴ'},
+    {t:'7 种收音',b:'27 种收音字母最终归为 7 种发音：ㄱ ㄴ ㄷ ㄹ ㅁ ㅂ ㅇ。',ex:'밥',z:'饭（读 pap）'},
+    {t:'连音 (연음)',b:'前字带收音 + 后字以 ㅇ 开头时，收音"移"到后字开头读。',ex:'한국어',z:'韩国语 → 한구거'},
+    {t:'紧音化',b:'某些收音之后，下一字的子音读紧音（双子音）。',ex:'학교',z:'学校 → 학꾜'},
+    {t:'激音化',b:'ㅎ 与 ㄱ/ㄷ/ㅂ/ㅈ 相邻时合并为激音 ㅋ/ㅌ/ㅍ/ㅊ。',ex:'좋다',z:'好 → 조타'},
+    {t:'鼻音化',b:'收音 ㄱ/ㄷ/ㅂ 后接 ㄴ/ㅁ 时变 ㅇ/ㄴ/ㅁ。',ex:'국민',z:'国民 → 궁민'},
   ],
 };
 
-// Grammar basics
+// ============================================================
+// 语法 GRAMMARS
+// ============================================================
 const GRAMMARS = {
   ru:[
-    {t:'名词的性',b:'俄语名词分阳性、阴性、中性。一般 -а/-я 结尾为阴性，-о/-е 结尾为中性，辅音结尾为阳性。',ex:'дом（家，阳性）/ книга（书，阴性）/ окно（窗，中性）',z:'名词词尾决定其语法性别'},
-    {t:'格的概念',b:'俄语有 6 个格：主格、生格、与格、宾格、工具格、前置格。每个格都会改变名词词尾。',ex:'Я читаю книгу.（我读书 - 宾格）',z:'我 + 读 + 书（宾格）'},
-    {t:'动词变位',b:'动词根据人称（я / ты / он 等）改变词尾。一般分第一变位法（-е-）和第二变位法（-и-）。',ex:'я читаю / ты читаешь / он читает',z:'我读 / 你读 / 他读'},
+    {t:'名词的性',b:'俄语名词分阳性、阴性、中性。一般 -а/-я 结尾为阴性，-о/-е 结尾为中性，辅音结尾为阳性。',ex:'дом / книга / окно',z:'家（阳）/ 书（阴）/ 窗（中）'},
+    {t:'格的概念',b:'俄语有 6 个格：主格、生格、与格、宾格、工具格、前置格。每个格都会改变名词词尾。',ex:'Я читаю книгу.',z:'我读书（книгу 是宾格）'},
+    {t:'动词变位',b:'动词根据人称（я / ты / он 等）改变词尾。一般分第一变位法（-е-）和第二变位法（-и-）。',ex:'я читаю / ты читаешь',z:'我读 / 你读'},
     {t:'否定句',b:'在动词或形容词前加 не，构成否定。',ex:'Я не понимаю.',z:'我不明白。'},
   ],
   es:[
-    {t:'名词的性与冠词',b:'西班牙语名词分阳性（el）和阴性（la）。一般 -o 结尾为阳性，-a 结尾为阴性。',ex:'el libro（书） / la mesa（桌子）',z:'书（阳性）/ 桌子（阴性）'},
-    {t:'动词变位',b:'西语动词根据人称变化，分 -ar / -er / -ir 三类。',ex:'hablar → yo hablo, tú hablas, él habla',z:'说 → 我说 / 你说 / 他说'},
-    {t:'ser 与 estar',b:'两个"是"的动词：ser 表本质属性，estar 表临时状态或位置。',ex:'Soy estudiante. / Estoy cansado.',z:'我是学生（身份）/ 我累了（状态）'},
+    {t:'名词的性与冠词',b:'西班牙语名词分阳性（el）和阴性（la）。一般 -o 结尾为阳性，-a 结尾为阴性。',ex:'el libro / la mesa',z:'书（阳）/ 桌子（阴）'},
+    {t:'动词变位',b:'西语动词根据人称变化，分 -ar / -er / -ir 三类。',ex:'hablar → yo hablo, tú hablas',z:'说 → 我说 / 你说'},
+    {t:'ser 与 estar',b:'两个"是"的动词：ser 表本质属性，estar 表临时状态或位置。',ex:'Soy estudiante. / Estoy cansado.',z:'我是学生 / 我累了'},
     {t:'问句',b:'西语问句开头加 ¿，结尾加 ?。',ex:'¿Cómo estás?',z:'你好吗？'},
   ],
   ja:[
     {t:'语序：主宾谓',b:'日语基本语序是 SOV（主语-宾语-动词），与中文 SVO 不同。',ex:'私は本を読みます。',z:'我 - 书 - 读（我读书）'},
     {t:'助词',b:'助词标示词在句中的作用：は（主题）、が（主语）、を（宾语）、に（方向/时间）、で（地点/手段）。',ex:'学校に行きます。',z:'去学校。'},
-    {t:'敬体与简体',b:'句尾 です／ます 是敬体（礼貌），だ／动词原形 是简体（朋友间）。',ex:'食べます（敬）/ 食べる（简）',z:'吃（礼貌）/ 吃（口语）'},
-    {t:'三种文字',b:'日语用平假名、片假名、汉字三种文字：平假名书写日语词，片假名书写外来语，汉字表意。',ex:'寿司 / すし / スシ（仅日料外来语会用）',z:'同一个词的不同写法'},
+    {t:'敬体与简体',b:'句尾 です／ます 是敬体（礼貌），だ／动词原形 是简体（朋友间）。',ex:'食べます / 食べる',z:'吃（敬）/ 吃（简）'},
+    {t:'三种文字',b:'日语用平假名、片假名、汉字三种文字：平假名书写日语词，片假名书写外来语，汉字表意。',ex:'寿司 / すし / スシ',z:'同一个词的不同写法'},
   ],
   ko:[
-    {t:'语序：主宾谓',b:'韩语基本语序是 SOV（主语-宾语-动词）。',ex:'저는 책을 읽어요.',z:'我 - 书 - 读（我在读书）'},
+    {t:'语序：主宾谓',b:'韩语基本语序是 SOV（主语-宾语-动词）。',ex:'저는 책을 읽어요.',z:'我 - 书 - 读'},
     {t:'助词',b:'은/는（主题）、이/가（主语）、을/를（宾语）、에（地点/时间）、에서（动作发生地）。',ex:'학교에 가요.',z:'去学校。'},
     {t:'敬语层级',b:'韩语动词词尾决定礼貌程度：-습니다（最礼貌）、-아/어요（一般礼貌）、-아/어（朋友间）。',ex:'갑니다 / 가요 / 가',z:'去（最礼貌 / 一般 / 简体）'},
-    {t:'尊敬主语',b:'对长辈或尊敬对象，动词加 -시-，并改用尊敬词。',ex:'드세요（请用餐）',z:'对长辈说"吃"用 드시다'},
+    {t:'尊敬主语',b:'对长辈或尊敬对象，动词加 -시-，并改用尊敬词。',ex:'드세요',z:'请用餐'},
   ],
 };
 
-// Common phrases
+// ============================================================
+// 常见词语 WORDS
+// ============================================================
+const WORDS = {
+  ru:[
+    {t:'да',z:'是 / 对'},{t:'нет',z:'不 / 否'},
+    {t:'я',z:'我'},{t:'ты',z:'你'},{t:'он / она',z:'他 / 她'},{t:'мы',z:'我们'},
+    {t:'спасибо',z:'谢谢'},{t:'пожалуйста',z:'请 / 不客气'},
+    {t:'вода',z:'水'},{t:'хлеб',z:'面包'},{t:'чай',z:'茶'},
+    {t:'дом',z:'家 / 房子'},{t:'книга',z:'书'},{t:'друг',z:'朋友'},
+    {t:'мама',z:'妈妈'},{t:'папа',z:'爸爸'},
+    {t:'хорошо',z:'好'},{t:'плохо',z:'坏 / 不好'},
+    {t:'большой',z:'大的'},{t:'маленький',z:'小的'},
+    {t:'один',z:'一'},{t:'два',z:'二'},{t:'три',z:'三'},
+    {t:'время',z:'时间'},{t:'сегодня',z:'今天'},{t:'завтра',z:'明天'},
+  ],
+  es:[
+    {t:'sí',z:'是'},{t:'no',z:'不'},
+    {t:'yo',z:'我'},{t:'tú',z:'你'},{t:'él / ella',z:'他 / 她'},{t:'nosotros',z:'我们'},
+    {t:'gracias',z:'谢谢'},{t:'por favor',z:'请'},{t:'de nada',z:'不客气'},
+    {t:'agua',z:'水'},{t:'pan',z:'面包'},{t:'café',z:'咖啡'},
+    {t:'casa',z:'家 / 房子'},{t:'libro',z:'书'},{t:'amigo',z:'朋友'},
+    {t:'madre',z:'母亲'},{t:'padre',z:'父亲'},
+    {t:'bueno',z:'好的'},{t:'malo',z:'不好的'},
+    {t:'grande',z:'大的'},{t:'pequeño',z:'小的'},
+    {t:'uno',z:'一'},{t:'dos',z:'二'},{t:'tres',z:'三'},
+    {t:'tiempo',z:'时间 / 天气'},{t:'hoy',z:'今天'},{t:'mañana',z:'明天'},
+  ],
+  ja:[
+    {t:'はい',z:'是 / 好的'},{t:'いいえ',z:'不 / 不是'},
+    {t:'私 (わたし)',z:'我'},{t:'あなた',z:'你'},
+    {t:'彼 (かれ)',z:'他'},{t:'彼女 (かのじょ)',z:'她'},
+    {t:'ありがとう',z:'谢谢'},{t:'すみません',z:'对不起 / 打扰了'},
+    {t:'水 (みず)',z:'水'},{t:'お茶 (おちゃ)',z:'茶'},
+    {t:'家 (いえ)',z:'家'},{t:'本 (ほん)',z:'书'},
+    {t:'友達 (ともだち)',z:'朋友'},
+    {t:'お母さん',z:'妈妈'},{t:'お父さん',z:'爸爸'},
+    {t:'いい',z:'好'},{t:'悪い (わるい)',z:'坏'},
+    {t:'大きい (おおきい)',z:'大'},{t:'小さい (ちいさい)',z:'小'},
+    {t:'一 (いち)',z:'一'},{t:'二 (に)',z:'二'},{t:'三 (さん)',z:'三'},
+    {t:'時間 (じかん)',z:'时间'},{t:'今日 (きょう)',z:'今天'},{t:'明日 (あした)',z:'明天'},
+  ],
+  ko:[
+    {t:'네',z:'是 / 好的'},{t:'아니요',z:'不 / 不是'},
+    {t:'저 / 나',z:'我（敬 / 简）'},{t:'당신 / 너',z:'你（敬 / 简）'},
+    {t:'그 / 그녀',z:'他 / 她'},{t:'우리',z:'我们'},
+    {t:'감사합니다',z:'谢谢'},{t:'미안합니다',z:'对不起'},
+    {t:'물',z:'水'},{t:'차 (茶)',z:'茶'},
+    {t:'집',z:'家'},{t:'책',z:'书'},{t:'친구',z:'朋友'},
+    {t:'어머니',z:'妈妈'},{t:'아버지',z:'爸爸'},
+    {t:'좋다',z:'好'},{t:'나쁘다',z:'坏'},
+    {t:'크다',z:'大'},{t:'작다',z:'小'},
+    {t:'하나',z:'一'},{t:'둘',z:'二'},{t:'셋',z:'三'},
+    {t:'시간',z:'时间'},{t:'오늘',z:'今天'},{t:'내일',z:'明天'},
+  ],
+};
+
+// ============================================================
+// 常见句子 PHRASES
+// ============================================================
 const PHRASES = {
   ru:[
     {t:'Привет!',z:'你好！'},
@@ -648,6 +779,8 @@ const PHRASES = {
     {t:'Где туалет?',z:'洗手间在哪？'},
     {t:'До свидания.',z:'再见。'},
     {t:'Очень приятно.',z:'很高兴认识你。'},
+    {t:'Я из Китая.',z:'我来自中国。'},
+    {t:'Помогите, пожалуйста.',z:'请帮帮我。'},
   ],
   es:[
     {t:'¡Hola!',z:'你好！'},
@@ -660,18 +793,22 @@ const PHRASES = {
     {t:'¿Dónde está el baño?',z:'洗手间在哪？'},
     {t:'Hasta luego.',z:'回头见。'},
     {t:'Mucho gusto.',z:'很高兴认识你。'},
+    {t:'Soy de China.',z:'我来自中国。'},
+    {t:'¿Me puede ayudar?',z:'你能帮我吗？'},
   ],
   ja:[
     {t:'こんにちは。',z:'你好。'},
     {t:'お元気ですか？',z:'你好吗？'},
     {t:'ありがとうございます。',z:'谢谢。'},
-    {t:'すみません。',z:'对不起／不好意思。'},
+    {t:'すみません。',z:'对不起 / 不好意思。'},
     {t:'わかりません。',z:'我不明白。'},
     {t:'私の名前は…です。',z:'我叫……'},
     {t:'いくらですか？',z:'多少钱？'},
     {t:'トイレはどこですか？',z:'洗手间在哪？'},
     {t:'さようなら。',z:'再见。'},
     {t:'はじめまして。',z:'初次见面。'},
+    {t:'中国から来ました。',z:'我来自中国。'},
+    {t:'手伝ってください。',z:'请帮帮我。'},
   ],
   ko:[
     {t:'안녕하세요.',z:'你好。'},
@@ -684,6 +821,8 @@ const PHRASES = {
     {t:'화장실이 어디예요?',z:'洗手间在哪？'},
     {t:'안녕히 가세요.',z:'再见。'},
     {t:'반갑습니다.',z:'很高兴见到你。'},
+    {t:'중국에서 왔어요.',z:'我来自中国。'},
+    {t:'도와주세요.',z:'请帮帮我。'},
   ],
 };
 
@@ -691,75 +830,74 @@ const PHRASES = {
 // STATE
 // ============================================================
 const state = {
-  lang:null,       // {id,name,native,flag,code}
-  scene:null,      // {id,icon,name,desc}
-  diff:null,       // {id,name,desc,dots}
-  history:[],      // {role, content}
-  prevScreen:'home',
-  recognizing:false,
+  lang:null, scene:null, diff:null,
+  history:[], recognizing:false,
 };
 
 // ============================================================
-// NAV
+// NAVIGATION
 // ============================================================
 function show(id){
-  // Stop any audio whenever we leave chat
   document.querySelectorAll('.screen,.chat-screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById('screen-'+id).classList.add('active');
-  if(id!=='chat'){
-    stopSpeech();
-    stopRecognition();
-  }
+  const target=document.getElementById('screen-'+id);
+  if(target) target.classList.add('active');
+  if(id!=='chat'){stopSpeech();stopRecognition();}
   window.scrollTo(0,0);
 }
 
-function backTo(target){
-  if(target==='auto'){
-    // From difficulty back: english -> en-scenes; non-english -> basic-hub
-    if(state.lang && state.lang.id==='en') show('en-scenes');
-    else show('basic-hub');
-    return;
-  }
-  if(target==='basic') show('basic-hub');
-  else if(target==='home'){state.lang=null;show('home');}
-  else show(target);
-}
-
 document.querySelectorAll('[data-back]').forEach(b=>{
-  b.addEventListener('click',()=>backTo(b.dataset.back));
+  b.addEventListener('click',()=>{
+    const t=b.dataset.back;
+    if(t==='home'){state.lang=null;show('home');}
+    else if(t==='basic'){show('basic-hub');}
+    else if(t==='scenes'){show('scenes');}
+    else show(t);
+  });
+});
+
+// 场景页返回：英语→home，其它→basic-hub
+document.getElementById('scenes-back').addEventListener('click',()=>{
+  if(state.lang && state.lang.id==='en'){state.lang=null;show('home');}
+  else show('basic-hub');
+});
+
+// 聊天页返回：回到难度选择
+document.getElementById('chat-back').addEventListener('click',()=>{
+  stopSpeech();stopRecognition();
+  show('difficulty');
 });
 
 // ============================================================
-// HOME RENDER
+// HOME
 // ============================================================
 function renderHome(){
   const grid=document.getElementById('lang-grid');
   grid.innerHTML='';
   LANGS.forEach(L=>{
-    const card=document.createElement('div');
-    card.className='lang-card';
-    card.innerHTML=`
-      <span class="lang-flag">${L.flag}</span>
-      <span class="lang-name">${L.name}</span>
-      <span class="lang-sub">${L.native}</span>`;
-    card.addEventListener('click',()=>{
+    const c=document.createElement('div');
+    c.className='lang-card';
+    c.innerHTML=`<span class="lang-flag">${L.flag}</span><span class="lang-name">${L.name}</span><span class="lang-sub">${L.native}</span>`;
+    c.addEventListener('click',()=>{
       state.lang=L;
-      if(L.id==='en') {renderEnScenes();show('en-scenes');}
-      else {renderBasicHub();show('basic-hub');}
+      if(L.id==='en'){renderScenes();show('scenes');}
+      else{renderBasicHub();show('basic-hub');}
     });
-    grid.appendChild(card);
+    grid.appendChild(c);
   });
 }
 
 // ============================================================
-// ENGLISH SCENES
+// SCENES (universal, language-aware header)
 // ============================================================
-function renderEnScenes(){
-  const list=document.getElementById('en-scene-list');
+function renderScenes(){
+  document.getElementById('scenes-title').textContent=`${state.lang.name} · ${state.lang.native}`;
+  document.getElementById('scenes-flag').textContent=state.lang.flag;
+  const list=document.getElementById('scene-list');
   list.innerHTML='';
   SCENES.forEach(S=>{
     const c=document.createElement('div');
     c.className='scene-card';
+    c.dataset.id=S.id;
     c.innerHTML=`
       <div class="scene-icon">${S.icon}</div>
       <div class="scene-info">
@@ -792,16 +930,13 @@ function renderDifficulty(){
         <span class="diff-name">${D.name}</span>
         <span class="diff-desc">${D.desc}</span>
       </div>`;
-    c.addEventListener('click',()=>{
-      state.diff=D;
-      startChat();
-    });
+    c.addEventListener('click',()=>{state.diff=D;startChat();});
     grid.appendChild(c);
   });
 }
 
 // ============================================================
-// BASIC HUB (non-English)
+// BASIC HUB
 // ============================================================
 function renderBasicHub(){
   document.getElementById('basic-hub-title').textContent=`${state.lang.name} · ${state.lang.native}`;
@@ -810,7 +945,7 @@ function renderBasicHub(){
   list.innerHTML='';
   MODULES.forEach(M=>{
     const c=document.createElement('div');
-    c.className='module-card';
+    c.className='module-card'+(M.id==='advanced'?' advanced':'');
     c.innerHTML=`
       <div class="module-icon" style="background:${M.color}">${M.icon}</div>
       <div class="module-info">
@@ -820,9 +955,11 @@ function renderBasicHub(){
       <span class="module-arrow">→</span>`;
     c.addEventListener('click',()=>{
       if(M.id==='alphabet'){renderAlphabet();show('alphabet');}
+      else if(M.id==='phonics'){renderPhonics();show('phonics');}
       else if(M.id==='grammar'){renderGrammar();show('grammar');}
+      else if(M.id==='words'){renderWords();show('words');}
       else if(M.id==='phrases'){renderPhrases();show('phrases');}
-      else if(M.id==='advanced'){renderEnScenes();show('en-scenes');}
+      else if(M.id==='advanced'){renderScenes();show('scenes');}
     });
     list.appendChild(c);
   });
@@ -832,21 +969,70 @@ function renderBasicHub(){
 // ALPHABET
 // ============================================================
 function renderAlphabet(){
-  const grid=document.getElementById('alpha-grid');
-  grid.innerHTML='';
-  const data=ALPHABETS[state.lang.id]||[];
-  data.forEach(A=>{
-    const c=document.createElement('div');
-    c.className='alpha-cell';
-    c.innerHTML=`
-      <span class="alpha-letter">${A.l}</span>
-      <span class="alpha-pron">${A.p}</span>
-      <span class="alpha-zh">${A.z}</span>`;
-    c.addEventListener('click',()=>{
-      const txt=A.l.split(' ')[0];
-      speak(txt,state.lang.code);
+  const wrap=document.getElementById('alphabet-content');
+  wrap.innerHTML='';
+  const data=ALPHABETS[state.lang.id];
+  if(!data)return;
+
+  const buildGrid=(items)=>{
+    const grid=document.createElement('div');
+    grid.className='learn-grid';
+    items.forEach(A=>{
+      const c=document.createElement('div');
+      c.className='alpha-cell'+(A.silent?' silent':'');
+      c.innerHTML=`
+        <span class="alpha-letter">${A.l}</span>
+        <span class="alpha-pron">${A.p}</span>
+        <span class="alpha-zh">${A.z}</span>`;
+      c.addEventListener('click',()=>{
+        if(A.silent)return;
+        const txt=A.l.split(' ')[0];
+        speak(txt,state.lang.code);
+      });
+      grid.appendChild(c);
     });
-    grid.appendChild(c);
+    return grid;
+  };
+
+  if(data.groups){
+    data.groups.forEach(g=>{
+      const lab=document.createElement('div');
+      lab.className='group-label';
+      lab.textContent=g.label;
+      wrap.appendChild(lab);
+      wrap.appendChild(buildGrid(g.items));
+    });
+  } else if(data.items){
+    if(data.head){
+      const lab=document.createElement('div');
+      lab.className='group-label';
+      lab.textContent=data.head;
+      wrap.appendChild(lab);
+    }
+    wrap.appendChild(buildGrid(data.items));
+  }
+}
+
+// ============================================================
+// PHONICS
+// ============================================================
+function renderPhonics(){
+  const wrap=document.getElementById('phonics-content');
+  wrap.innerHTML='';
+  (PHONICS[state.lang.id]||[]).forEach(P=>{
+    const c=document.createElement('div');
+    c.className='grammar-card';
+    c.innerHTML=`
+      <div class="grammar-title">${P.t}</div>
+      <div class="grammar-body">${P.b}</div>
+      <div class="grammar-example" data-speak="${encodeURIComponent(P.ex)}">
+        <div>${P.ex} 🔊</div>
+        <div class="ex-zh">${P.z}</div>
+      </div>`;
+    wrap.appendChild(c);
+  });
+  wrap.querySelectorAll('[data-speak]').forEach(el=>{
+    el.addEventListener('click',()=>speak(decodeURIComponent(el.dataset.speak),state.lang.code));
   });
 }
 
@@ -856,18 +1042,44 @@ function renderAlphabet(){
 function renderGrammar(){
   const wrap=document.getElementById('grammar-content');
   wrap.innerHTML='';
-  const data=GRAMMARS[state.lang.id]||[];
-  data.forEach(G=>{
+  (GRAMMARS[state.lang.id]||[]).forEach(G=>{
     const c=document.createElement('div');
     c.className='grammar-card';
     c.innerHTML=`
       <div class="grammar-title">${G.t}</div>
       <div class="grammar-body">${G.b}</div>
-      <div class="grammar-example">
-        <div>${G.ex}</div>
+      <div class="grammar-example" data-speak="${encodeURIComponent(G.ex)}">
+        <div>${G.ex} 🔊</div>
         <div class="ex-zh">${G.z}</div>
       </div>`;
     wrap.appendChild(c);
+  });
+  wrap.querySelectorAll('[data-speak]').forEach(el=>{
+    el.addEventListener('click',()=>speak(decodeURIComponent(el.dataset.speak),state.lang.code));
+  });
+}
+
+// ============================================================
+// WORDS
+// ============================================================
+function renderWords(){
+  const list=document.getElementById('words-list');
+  list.innerHTML='';
+  (WORDS[state.lang.id]||[]).forEach(W=>{
+    const c=document.createElement('div');
+    c.className='phrase-card';
+    c.innerHTML=`
+      <div class="phrase-text">
+        <div class="phrase-target">${W.t}</div>
+        <div class="phrase-zh">${W.z}</div>
+      </div>
+      <div class="phrase-play">▶</div>`;
+    c.addEventListener('click',()=>{
+      // 抽掉括号内的注音再朗读
+      const clean=W.t.replace(/\s*\(.*?\)\s*/g,' ').trim();
+      speak(clean,state.lang.code);
+    });
+    list.appendChild(c);
   });
 }
 
@@ -877,8 +1089,7 @@ function renderGrammar(){
 function renderPhrases(){
   const list=document.getElementById('phrase-list');
   list.innerHTML='';
-  const data=PHRASES[state.lang.id]||[];
-  data.forEach(P=>{
+  (PHRASES[state.lang.id]||[]).forEach(P=>{
     const c=document.createElement('div');
     c.className='phrase-card';
     c.innerHTML=`
@@ -901,16 +1112,8 @@ function startChat(){
   document.getElementById('chat-sub-text').textContent='AI 教练在线 · 会先纠错再回应';
   renderMessages();
   show('chat');
-  // Send AI greeting
   setTimeout(()=>aiOpening(),300);
 }
-
-document.getElementById('chat-back').addEventListener('click',()=>{
-  stopSpeech();
-  stopRecognition();
-  // Back goes to difficulty (or scenes for non-en advanced)
-  show('difficulty');
-});
 
 function renderMessages(){
   const box=document.getElementById('chat-messages');
@@ -919,11 +1122,7 @@ function renderMessages(){
     box.innerHTML=`<div class="chat-empty"><div class="chat-empty-icon">💬</div><div class="chat-empty-title">开始对话吧</div><div class="chat-empty-desc">点击下方麦克风录音，或直接输入文字。AI 会先纠正你的错误，再继续聊天。</div></div>`;
     return;
   }
-  // column-reverse: append in chronological order, newest renders at top
-  state.history.forEach(m=>{
-    const el=buildMsgEl(m);
-    box.appendChild(el);
-  });
+  state.history.forEach(m=>{box.appendChild(buildMsgEl(m));});
 }
 
 function buildMsgEl(m){
@@ -944,12 +1143,10 @@ function buildMsgEl(m){
   }
   const d=document.createElement('div');
   d.className='msg '+(m.role==='user'?'user':'ai');
-  let zh=m.zh?`<div class="msg-zh">${m.zh}</div>`:'';
+  let zh=m.zh?`<div class="msg-zh">${escapeHtml(m.zh)}</div>`:'';
   let tools='';
   if(m.role==='ai' && m.content){
-    tools=`<div class="msg-tools">
-      <button class="msg-tool-btn" data-speak="${encodeURIComponent(m.content)}">🔊 播放</button>
-    </div>`;
+    tools=`<div class="msg-tools"><button class="msg-tool-btn" data-speak="${encodeURIComponent(m.content)}">🔊 播放</button></div>`;
   }
   d.innerHTML=`<div class="msg-bubble">${escapeHtml(m.content)}</div>${zh}${tools}`;
   return d;
@@ -957,7 +1154,6 @@ function buildMsgEl(m){
 
 function escapeHtml(s){return (s||'').replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 
-// Speak buttons (event delegation)
 document.getElementById('chat-messages').addEventListener('click',e=>{
   const b=e.target.closest('[data-speak]');
   if(b){speak(decodeURIComponent(b.dataset.speak),state.lang.code);}
@@ -965,39 +1161,35 @@ document.getElementById('chat-messages').addEventListener('click',e=>{
 
 function pushAndRender(item){
   state.history.push(item);
-  // Re-render
   const box=document.getElementById('chat-messages');
-  // Remove empty state
   const empty=box.querySelector('.chat-empty');
   if(empty)empty.remove();
-  // append new node
-  const el=buildMsgEl(item);
-  box.appendChild(el);
+  box.appendChild(buildMsgEl(item));
 }
 
 function removeTyping(){
   const box=document.getElementById('chat-messages');
-  // Find last typing in DOM and the matching state entry
   state.history=state.history.filter(m=>m.role!=='typing');
   const t=box.querySelector('.typing');
   if(t)t.remove();
 }
 
 // ============================================================
-// AI CALL via Anthropic API
+// AI CALL
 // ============================================================
 async function callAI(userMsg, isOpening=false){
-  const sysPrompt = buildSystemPrompt(isOpening);
-  const messages = [];
-  // Build conversation history (excluding corrections/typings)
+  const sysPrompt=buildSystemPrompt(isOpening);
+  const messages=[];
   state.history.filter(m=>m.role==='user'||m.role==='ai').forEach(m=>{
-    messages.push({role:m.role==='ai'?'assistant':'user',content:m.role==='ai'?(m.raw||JSON.stringify({reply:m.content,translation:m.zh,hasError:false})):m.content});
+    messages.push({
+      role:m.role==='ai'?'assistant':'user',
+      content:m.role==='ai'?(m.raw||JSON.stringify({reply:m.content,translation:m.zh,hasError:false})):m.content
+    });
   });
   if(userMsg) messages.push({role:'user',content:userMsg});
   if(isOpening && messages.length===0){
-    messages.push({role:'user',content:'<开场白请求>请用'+state.lang.native+'说一句开场问候，引出场景对话主题。'});
+    messages.push({role:'user',content:'<开场白请求> 请用 '+state.lang.native+' 说一句开场问候，引出场景对话主题。'});
   }
-
   try{
     const r=await fetch("https://api.anthropic.com/v1/messages",{
       method:"POST",
@@ -1011,17 +1203,16 @@ async function callAI(userMsg, isOpening=false){
     });
     const data=await r.json();
     const txt=(data.content||[]).map(c=>c.text||'').join('').trim();
-    // Strip code fences
     const clean=txt.replace(/^```(?:json)?\s*/i,'').replace(/```\s*$/,'').trim();
     return JSON.parse(clean);
   }catch(e){
     console.error(e);
-    return {hasError:false,reply:'(网络错误，请稍后再试)',translation:'',raw:''};
+    return {hasError:false,reply:'(网络错误，请稍后再试)',translation:'连接 AI 服务失败'};
   }
 }
 
-function buildSystemPrompt(isOpening){
-  const L=state.lang, S=state.scene, D=state.diff;
+function buildSystemPrompt(){
+  const L=state.lang,S=state.scene,D=state.diff;
   return `你是一位专业的${L.name}（${L.native}）口语教练。学习者母语是中文。
 
 【场景】${S.name}（${S.desc}）
@@ -1049,16 +1240,10 @@ ${S.id==='daily'?'本场景为日常对话：自然、口语化、贴近真实�
 }
 
 async function aiOpening(){
-  const typing={role:'typing'};
-  pushAndRender(typing);
+  pushAndRender({role:'typing'});
   const res=await callAI('',true);
   removeTyping();
-  const aiMsg={
-    role:'ai',
-    content:res.reply||'',
-    zh:res.translation||'',
-    raw:JSON.stringify(res)
-  };
+  const aiMsg={role:'ai',content:res.reply||'',zh:res.translation||'',raw:JSON.stringify(res)};
   pushAndRender(aiMsg);
   speak(aiMsg.content,state.lang.code);
 }
@@ -1066,114 +1251,66 @@ async function aiOpening(){
 async function sendUserMessage(text){
   if(!text||!text.trim())return;
   text=text.trim();
-
-  // 1. push user msg
-  const userMsg={role:'user',content:text};
-  pushAndRender(userMsg);
-
-  // 2. typing indicator
+  pushAndRender({role:'user',content:text});
   pushAndRender({role:'typing'});
-
-  // 3. call AI
   const res=await callAI(text);
   removeTyping();
-
-  // 4. correction first if exists
   if(res.hasError && res.correctionFixed){
-    const original=escapeHtml(res.correctionOriginal||text);
-    const fixed=escapeHtml(res.correctionFixed);
     pushAndRender({
       role:'correction',
-      html:`<del>${original}</del><br><ins>${fixed}</ins>`,
+      html:`<del>${escapeHtml(res.correctionOriginal||text)}</del><br><ins>${escapeHtml(res.correctionFixed)}</ins>`,
       explain:escapeHtml(res.explanation||'')
     });
   }
-
-  // 5. AI reply
-  const aiMsg={
-    role:'ai',
-    content:res.reply||'',
-    zh:res.translation||'',
-    raw:JSON.stringify(res)
-  };
+  const aiMsg={role:'ai',content:res.reply||'',zh:res.translation||'',raw:JSON.stringify(res)};
   pushAndRender(aiMsg);
   speak(aiMsg.content,state.lang.code);
 }
 
 // ============================================================
-// INPUT HANDLING
+// INPUT
 // ============================================================
 const ti=document.getElementById('text-input');
 const sendBtn=document.getElementById('send-btn');
-
 ti.addEventListener('input',()=>{
   ti.style.height='auto';
   ti.style.height=Math.min(ti.scrollHeight,100)+'px';
 });
-
 ti.addEventListener('keydown',e=>{
-  if(e.key==='Enter' && !e.shiftKey){
-    e.preventDefault();
-    handleSend();
-  }
+  if(e.key==='Enter' && !e.shiftKey){e.preventDefault();handleSend();}
 });
-
 sendBtn.addEventListener('click',handleSend);
-
 function handleSend(){
   const v=ti.value.trim();
   if(!v)return;
-  ti.value='';
-  ti.style.height='auto';
+  ti.value='';ti.style.height='auto';
   sendUserMessage(v);
 }
 
 // ============================================================
-// SPEECH SYNTHESIS (TTS)
+// SPEECH SYNTHESIS / RECOGNITION
 // ============================================================
-let currentUtter=null;
 function speak(text,langCode){
   if(!('speechSynthesis' in window))return;
   stopSpeech();
   const u=new SpeechSynthesisUtterance(text);
   u.lang=langCode||'en-US';
   u.rate=state.diff && state.diff.id==='easy'?0.85:state.diff && state.diff.id==='hard'?1.05:0.95;
-  currentUtter=u;
-  // Pick a matching voice if available
   const voices=window.speechSynthesis.getVoices();
-  const v=voices.find(v=>v.lang===langCode)||voices.find(v=>v.lang.startsWith(langCode.split('-')[0]));
+  const v=voices.find(v=>v.lang===langCode)||voices.find(v=>v.lang.startsWith((langCode||'').split('-')[0]));
   if(v)u.voice=v;
   window.speechSynthesis.speak(u);
 }
-function stopSpeech(){
-  if('speechSynthesis' in window){window.speechSynthesis.cancel();}
-  currentUtter=null;
-}
+function stopSpeech(){if('speechSynthesis' in window){window.speechSynthesis.cancel();}}
 
-// Reload voices when ready
-if('speechSynthesis' in window){
-  window.speechSynthesis.onvoiceschanged=()=>{};
-}
-
-// ============================================================
-// SPEECH RECOGNITION (STT)
-// ============================================================
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
 let rec=null;
 const micBtn=document.getElementById('mic-btn');
-
 micBtn.addEventListener('click',()=>{
-  if(!SR){
-    alert('当前浏览器不支持语音识别。请用 Chrome 或 Safari，或直接输入文字。');
-    return;
-  }
-  if(state.recognizing){
-    stopRecognition();
-    return;
-  }
+  if(!SR){alert('当前浏览器不支持语音识别。请用 Chrome 或 Safari，或直接输入文字。');return;}
+  if(state.recognizing){stopRecognition();return;}
   startRecognition();
 });
-
 function startRecognition(){
   if(!SR)return;
   stopSpeech();
@@ -1187,30 +1324,27 @@ function startRecognition(){
     for(const r of e.results) txt+=r[0].transcript;
     ti.value=txt;
   };
-  rec.onerror=(e)=>{console.error('SR error',e);state.recognizing=false;micBtn.classList.remove('recording');};
+  rec.onerror=()=>{state.recognizing=false;micBtn.classList.remove('recording');};
   rec.onend=()=>{
     state.recognizing=false;
     micBtn.classList.remove('recording');
     const v=ti.value.trim();
-    if(v){
-      ti.value='';
-      sendUserMessage(v);
-    }
+    if(v){ti.value='';sendUserMessage(v);}
   };
-  try{rec.start();}catch(e){console.error(e);}
+  try{rec.start();}catch(e){}
 }
-
 function stopRecognition(){
   if(rec){try{rec.stop();}catch(e){}}
   state.recognizing=false;
   micBtn.classList.remove('recording');
 }
 
-// Stop everything when page hides
 document.addEventListener('visibilitychange',()=>{
   if(document.hidden){stopSpeech();stopRecognition();}
 });
 window.addEventListener('beforeunload',()=>{stopSpeech();stopRecognition();});
+
+if('speechSynthesis' in window){window.speechSynthesis.onvoiceschanged=()=>{};}
 
 // ============================================================
 // INIT
