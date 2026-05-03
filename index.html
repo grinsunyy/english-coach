@@ -1215,7 +1215,7 @@ function removeTyping(){
 // AI CALL
 // ============================================================
 async function callAI(userMsg, isOpening=false){
-  const apiKey='YOUR_DEEPSEEK_KEY_HERE';
+  const apiKey='sk-d3ea69c300694d53b8692ec0a6bc4536';
   const sysPrompt=buildSystemPrompt();
   const messages=[{role:'system',content:sysPrompt}];
   state.history.filter(m=>m.role==='user'||m.role==='ai').forEach(m=>{
