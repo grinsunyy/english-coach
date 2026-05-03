@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>AI English Coach</title>
+
+<style>
+body {
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #f6f7f9;
+    margin: 0;
+}
+
+.container {
+    max-width: 700px;
+    margin: auto;
+    padding: 20px;
+}
+
+h2 {
+    text-align: center;
+}
+
+.mode-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    background: #e5e7eb;
+    cursor: pointer;
+}
+
+button.active {
+    background: black;
+    color: white;
+}
+
+.card {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.speak-btn {
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    border-radius: 12px;
+    background: black;
+    color: white;
+    border: none;
+}
+
+.small {
+    font-size: 12px;
+    color: gray;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>🎙 AI English Coach</h2>
+
+<!-- 模式选择 -->
+<div class="mode-bar">
+<button id="dailyBtn" class="active" onclick="setMode('daily')">Daily</button>
+<button id="workBtn" onclick="setMode('work')">Work</button>
+<button id="deepBtn" onclick="setMode('deep')">Deep</button>
+</div>
+
+<!-- 语音 -->
+<div class="card">
+<button class="speak-btn" onclick="startSpeak()">🎤 Speak</button>
+<p class="small">Speak English anytime</p>
+</div>
+
+<!-- 用户 -->
+<div class="card">
+<b>You said:</b>
+<div id="userText"></div>
+</div>
+
+<!-- AI -->
+<div class="card">
+<b>AI Coach:</b>
+<div id="aiText"></div>
+</div>
+
+<!-- 记忆 -->
+<div class="card">
+<b>📌 Memory (your mistakes)</b>
+<div id="memory"></div>
+</div>
+
+</div>
+
+<script>
+
+const API_KEY = "你的DeepSeek API Key";
+
+let mode = "daily";
+
+let messages = [];
+
+let memory = JSON.parse(localStorage.getItem("memory") || "[]");
+
+// 初始化
+initChat();
+
+function initChat() {
+    messages = [
+        {
+            role: "system",
+            content: getSystemPrompt()
+        }
+    ];
+}
+
+// 模式切换
+function setMode(m) {
+    mode = m;
+
+    document.querySelectorAll("button").forEach(b => b.classList.remove("active"));
+
+    if (m === "daily") document.getElementById("dailyBtn").classList.add("active");
+    if (m === "work") document.getElementById("workBtn").classList.add("active");
+    if (m === "deep") document.getElementById("deepBtn").classList.add("active");
+
+    initChat();
+}
+
+// Prompt控制核心
+function getSystemPrompt() {
+
+if (mode === "daily") {
+return "You are a friendly American friend. Talk about daily life naturally. Correct user's English gently.";
+}
+
+if (mode === "work") {
+return "You are a professional American workplace English coach. Focus on business, meetings, emails, interviews. Correct and improve expressions.";
+}
+
+if (mode === "deep") {
+return "You are a thoughtful American. Discuss philosophy, psychology, and life meaning. Ask deep questions. Correct English naturally.";
+}
+
+}
+
+// 语音识别
+function startSpeak() {
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = "en-US";
+    recognition.start();
+
+    recognition.onresult = function(event) {
+        const text = event.results[0][0].transcript;
+        document.getElementById("userText").innerText = text;
+        sendToAI(text);
+    };
+}
+
+// AI请求
+async function sendToAI(text) {
+
+    messages.push({
+        role: "user",
+        content: text
+    });
+
+    const res = await fetch("https://api.deepseek.com/chat/completions", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + API_KEY
+        },
+        body: JSON.stringify({
+            model: "deepseek-chat",
+            messages: messages
+        })
+    });
+
+    const data = await res.json();
+    const reply = data.choices[0].message.content;
+
+    messages.push({
+        role: "assistant",
+        content: reply
+    });
+
+    document.getElementById("aiText").innerText = reply;
+
+    // memory
+    memory.push({
+        wrong: text,
+        correct: reply,
+        mode: mode,
+        time: new Date().toISOString()
+    });
+
+    localStorage.setItem("memory", JSON.stringify(memory));
+
+    renderMemory();
+}
+
+// 显示记忆
+function renderMemory() {
+    let html = memory.slice(-5).map(m => `
+❌ ${m.wrong}<br>
+💡 ${m.correct}<br><br>
+`).join("");
+
+    document.getElementById("memory").innerHTML = html || "No records yet";
+}
+
+renderMemory();
+
+</script>
+
+</body>
+</html>
